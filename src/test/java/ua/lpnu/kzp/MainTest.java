@@ -26,4 +26,23 @@ class MainTest {
 
         assertTrue(input.endsWith(Path.of("data", "custom.csv")));
     }
+
+    @Test
+    void splitKeepsExpectedTripFields() {
+        String line = "Львів 2 - Жовква 06:15;Петро Коваль;29.4;6.8;2026-09-10";
+
+        String[] fields = line.split(";", -1);
+
+        assertTrue(fields.length == 5);
+    }
+
+    @Test
+    void splitKeepsBlankFieldsForValidation() {
+        String line = ";Петро Коваль;29.4;6.8;2026-09-11";
+
+        String[] fields = line.split(";", -1);
+
+        assertTrue(fields.length == 5);
+        assertTrue(fields[0].isBlank());
+    }
 }

@@ -10,6 +10,7 @@ import java.util.List;
 public final class Main {
     private static final String VERSION = "1.0.0";
     private static final Path DEFAULT_INPUT = Path.of("data", "input.csv");
+    private static final int EXPECTED_FIELD_COUNT = 5;
 
     private Main() {
     }
@@ -65,11 +66,23 @@ public final class Main {
 
     static void printInputLines(Path input) throws IOException {
         List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
+        int structurallyValidRows = 0;
+        int structurallyInvalidRows = 0;
 
         System.out.printf("Input file: %s%n", input);
         System.out.printf("Rows: %d%n", lines.size());
         for (int index = 0; index < lines.size(); index++) {
-            System.out.printf("%2d | %s%n", index + 1, lines.get(index));
+            String line = lines.get(index);
+            String[] fields = line.split(";", -1);
+            if (fields.length == EXPECTED_FIELD_COUNT) {
+                structurallyValidRows++;
+            } else {
+                structurallyInvalidRows++;
+            }
+
+            System.out.printf("%2d | fields=%d | %s%n", index + 1, fields.length, line);
         }
+        System.out.printf("Rows with %d fields: %d%n", EXPECTED_FIELD_COUNT, structurallyValidRows);
+        System.out.printf("Rows with invalid field count: %d%n", structurallyInvalidRows);
     }
 }
