@@ -66,23 +66,69 @@ public final class Main {
 
     static void printInputLines(Path input) throws IOException {
         List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
-        int structurallyValidRows = 0;
-        int structurallyInvalidRows = 0;
+        int validRows = 0;
+        int invalidRows = 0;
 
         System.out.printf("Input file: %s%n", input);
         System.out.printf("Rows: %d%n", lines.size());
         for (int index = 0; index < lines.size(); index++) {
             String line = lines.get(index);
             String[] fields = line.split(";", -1);
-            if (fields.length == EXPECTED_FIELD_COUNT) {
-                structurallyValidRows++;
-            } else {
-                structurallyInvalidRows++;
-            }
 
-            System.out.printf("%2d | fields=%d | %s%n", index + 1, fields.length, line);
+            String error = validateTripFields(fields, index + 1);
+            if (error == null) {
+                validRows++;
+                System.out.printf("%2d | valid   | %s%n", index + 1, line);
+            } else {
+                invalidRows++;
+                System.out.printf("%2d | invalid | %s | %s%n", index + 1, error, line);
+            }
         }
-        System.out.printf("Rows with %d fields: %d%n", EXPECTED_FIELD_COUNT, structurallyValidRows);
-        System.out.printf("Rows with invalid field count: %d%n", structurallyInvalidRows);
+        System.out.printf("Valid rows: %d%n", validRows);
+        System.out.printf("Invalid rows: %d%n", invalidRows);
+    }
+
+    static String validateTripFields(String[] fields, int lineNumber) {
+        if (fields.length != EXPECTED_FIELD_COUNT) {
+            return "line %d: expected %d fields, got %d".formatted(lineNumber, EXPECTED_FIELD_COUNT, fields.length);
+        }
+
+        String vehicle = fields[0].trim();
+        String driver = fields[1].trim();
+        String date = fields[4].trim();
+        if (vehicle.isBlank()) {
+            return "line %d: vehicle is required".formatted(lineNumber);
+        }
+        if (driver.isBlank()) {
+            return "line %d: driver is required".formatted(lineNumber);
+        }
+        if (date.isBlank()) {
+            return "line %d: date is required".formatted(lineNumber);
+        }
+
+        Double km = parseDouble(fields[2]);
+        if (km == null) {
+            return "line %d: km has invalid number format".formatted(lineNumber);
+        }
+        Double fuelLiters = parseDouble(fields[3]);
+        if (fuelLiters == null) {
+            return "line %d: fuelLiters has invalid number format".formatted(lineNumber);
+        }
+        if (km <= 0.0) {
+            return "line %d: km must be greater than 0".formatted(lineNumber);
+        }
+        if (fuelLiters < 0.0) {
+            return "line %d: fuelLiters must not be negative".formatted(lineNumber);
+        }
+
+        return null;
+    }
+
+    private static Double parseDouble(String value) {
+        try {
+            return Double.parseDouble(value.trim());
+        } catch (NumberFormatException exception) {
+            return null;
+        }
     }
 }
