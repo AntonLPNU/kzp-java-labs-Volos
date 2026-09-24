@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 
 /** Entry point for the lab Java console application. */
 public final class Main {
@@ -68,6 +69,10 @@ public final class Main {
         List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
         int validRows = 0;
         int invalidRows = 0;
+        double totalKm = 0.0;
+        double totalFuelLiters = 0.0;
+        double longestTripKm = 0.0;
+        String longestTrip = "";
 
         System.out.printf("Input file: %s%n", input);
         System.out.printf("Rows: %d%n", lines.size());
@@ -78,6 +83,14 @@ public final class Main {
             String error = validateTripFields(fields, index + 1);
             if (error == null) {
                 validRows++;
+                double km = Double.parseDouble(fields[2].trim());
+                double fuelLiters = Double.parseDouble(fields[3].trim());
+                totalKm += km;
+                totalFuelLiters += fuelLiters;
+                if (km > longestTripKm) {
+                    longestTripKm = km;
+                    longestTrip = fields[0].trim();
+                }
                 System.out.printf("%2d | valid   | %s%n", index + 1, line);
             } else {
                 invalidRows++;
@@ -86,6 +99,11 @@ public final class Main {
         }
         System.out.printf("Valid rows: %d%n", validRows);
         System.out.printf("Invalid rows: %d%n", invalidRows);
+        if (validRows > 0) {
+            System.out.printf(Locale.ROOT, "Total distance: %.2f km%n", totalKm);
+            System.out.printf(Locale.ROOT, "Average fuel consumption: %.2f l/100 km%n", fuelPer100Km(totalFuelLiters, totalKm));
+            System.out.printf(Locale.ROOT, "Longest trip: %s, %.2f km%n", longestTrip, longestTripKm);
+        }
     }
 
     static String validateTripFields(String[] fields, int lineNumber) {
@@ -130,5 +148,12 @@ public final class Main {
         } catch (NumberFormatException exception) {
             return null;
         }
+    }
+
+    static double fuelPer100Km(double fuelLiters, double km) {
+        if (km <= 0.0) {
+            throw new IllegalArgumentException("km must be greater than 0");
+        }
+        return fuelLiters / km * 100.0;
     }
 }

@@ -2,6 +2,7 @@ package ua.lpnu.kzp;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.nio.file.Path;
 
@@ -80,5 +81,12 @@ class MainTest {
         String[] fields = "Львів 2 - Дев'ятир 10:20; ;45.0;10.1;2026-09-11".split(";", -1);
 
         assertTrue(Main.validateTripFields(fields, 12).contains("driver is required"));
+    }
+
+    @Test
+    void fuelPer100KmUsesTotalFuelAndTotalDistance() {
+        double result = Main.fuelPer100Km(85.2, 375.1);
+
+        assertEquals(22.71, result, 0.01);
     }
 }
