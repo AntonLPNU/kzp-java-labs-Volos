@@ -11,6 +11,7 @@ import java.util.Locale;
 public final class Main {
     private static final String VERSION = "1.0.0";
     private static final Path DEFAULT_INPUT = Path.of("data", "input.csv");
+    private static final Path DEFAULT_OUTPUT = Path.of("out", "report.txt");
     private static final int EXPECTED_FIELD_COUNT = 5;
 
     private Main() {
@@ -34,7 +35,10 @@ public final class Main {
 
         try {
             Path input = inputPath(args);
-            printInputLines(input);
+            Path output = outputPath(args);
+            String report = buildReport(input);
+            System.out.print(report);
+            writeReport(output, report);
         } catch (IllegalArgumentException | IOException exception) {
             System.err.printf("Error: %s%n", exception.getMessage());
             System.exit(1);
@@ -65,7 +69,19 @@ public final class Main {
         return DEFAULT_INPUT;
     }
 
-    static void printInputLines(Path input) throws IOException {
+    static Path outputPath(String[] args) {
+        for (int index = 0; index < args.length; index++) {
+            if ("--output".equals(args[index])) {
+                if (index + 1 >= args.length) {
+                    throw new IllegalArgumentException("Missing value for --output");
+                }
+                return Path.of(args[index + 1]);
+            }
+        }
+        return DEFAULT_OUTPUT;
+    }
+
+    static String buildReport(Path input) throws IOException {
         List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
         int validRows = 0;
         int invalidRows = 0;
@@ -73,9 +89,10 @@ public final class Main {
         double totalFuelLiters = 0.0;
         double longestTripKm = 0.0;
         String longestTrip = "";
+        StringBuilder report = new StringBuilder();
 
-        System.out.printf("Input file: %s%n", input);
-        System.out.printf("Rows: %d%n", lines.size());
+        report.append("Input file: %s%n".formatted(input));
+        report.append("Rows: %d%n".formatted(lines.size()));
         for (int index = 0; index < lines.size(); index++) {
             String line = lines.get(index);
             String[] fields = line.split(";", -1);
@@ -91,19 +108,29 @@ public final class Main {
                     longestTripKm = km;
                     longestTrip = fields[0].trim();
                 }
-                System.out.printf("%2d | valid   | %s%n", index + 1, line);
+                report.append("%2d | valid   | %s%n".formatted(index + 1, line));
             } else {
                 invalidRows++;
-                System.out.printf("%2d | invalid | %s | %s%n", index + 1, error, line);
+                report.append("%2d | invalid | %s | %s%n".formatted(index + 1, error, line));
             }
         }
-        System.out.printf("Valid rows: %d%n", validRows);
-        System.out.printf("Invalid rows: %d%n", invalidRows);
+        report.append("Valid rows: %d%n".formatted(validRows));
+        report.append("Invalid rows: %d%n".formatted(invalidRows));
         if (validRows > 0) {
-            System.out.printf(Locale.ROOT, "Total distance: %.2f km%n", totalKm);
-            System.out.printf(Locale.ROOT, "Average fuel consumption: %.2f l/100 km%n", fuelPer100Km(totalFuelLiters, totalKm));
-            System.out.printf(Locale.ROOT, "Longest trip: %s, %.2f km%n", longestTrip, longestTripKm);
+            report.append(String.format(Locale.ROOT, "Total distance: %.2f km%n", totalKm));
+            report.append(String.format(Locale.ROOT, "Average fuel consumption: %.2f l/100 km%n", fuelPer100Km(totalFuelLiters, totalKm)));
+            report.append(String.format(Locale.ROOT, "Longest trip: %s, %.2f km%n", longestTrip, longestTripKm));
         }
+
+        return report.toString();
+    }
+
+    static void writeReport(Path output, String report) throws IOException {
+        Path parent = output.getParent();
+        if (parent != null) {
+            Files.createDirectories(parent);
+        }
+        Files.writeString(output, report, StandardCharsets.UTF_8);
     }
 
     static String validateTripFields(String[] fields, int lineNumber) {

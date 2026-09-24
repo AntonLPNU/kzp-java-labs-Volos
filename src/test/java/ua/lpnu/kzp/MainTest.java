@@ -4,9 +4,12 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class MainTest {
     @Test
@@ -27,6 +30,13 @@ class MainTest {
         Path input = Main.inputPath(new String[] {"--input", "data/custom.csv"});
 
         assertTrue(input.endsWith(Path.of("data", "custom.csv")));
+    }
+
+    @Test
+    void outputPathUsesCommandLineValue() {
+        Path output = Main.outputPath(new String[] {"--output", "out/custom-report.txt"});
+
+        assertTrue(output.endsWith(Path.of("out", "custom-report.txt")));
     }
 
     @Test
@@ -88,5 +98,25 @@ class MainTest {
         double result = Main.fuelPer100Km(85.2, 375.1);
 
         assertEquals(22.71, result, 0.01);
+    }
+
+    @Test
+    void buildReportContainsCalculatedIndicators() throws IOException {
+        String report = Main.buildReport(Path.of("data", "input.csv"));
+
+        assertTrue(report.contains("Valid rows: 8"));
+        assertTrue(report.contains("Invalid rows: 4"));
+        assertTrue(report.contains("Total distance: 375.10 km"));
+        assertTrue(report.contains("Average fuel consumption: 22.71 l/100 km"));
+        assertTrue(report.contains("Longest trip: Львів 2 - Сокаль 16:20, 78.00 km"));
+    }
+
+    @Test
+    void writeReportCreatesOutputFile(@TempDir Path tempDir) throws IOException {
+        Path output = tempDir.resolve("report.txt");
+
+        Main.writeReport(output, "test report");
+
+        assertEquals("test report", Files.readString(output));
     }
 }

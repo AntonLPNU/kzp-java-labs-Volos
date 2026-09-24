@@ -35,8 +35,28 @@ vehicle;driver;km;fuelLiters;date
 
 ## Поточний стан
 
-Підготовлено базову структуру репозиторію для Java-проєкту. Наступний етап - налаштування Maven, тестів, статичного аналізатора та виконуваного JAR.
+Підготовлено Maven-проєкт із консольною програмою. Програма читає `data/input.csv`, перевіряє записи, обчислює показники варіанта 7, друкує звіт у консоль і записує його в `out/report.txt`.
 
 ## Запуск
 
-Команди збирання та запуску будуть додані після налаштування Maven.
+На Windows:
+
+```powershell
+.\mvnw.cmd test
+.\mvnw.cmd package
+java -jar target\kzp-java-labs-volos-1.0.0.jar
+```
+
+Із власними шляхами до вхідного файла та звіту:
+
+```powershell
+java -jar target\kzp-java-labs-volos-1.0.0.jar --input data\input.csv --output out\report.txt
+```
+
+Версія програми:
+
+```powershell
+java -jar target\kzp-java-labs-volos-1.0.0.jar --version
+```
+
+На macOS та Ubuntu замість `.\mvnw.cmd` використовуйте `./mvnw`.
