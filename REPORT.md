@@ -66,7 +66,7 @@ vehicle;driver;km;fuelLiters;date
 - [#3 Обробка CSV для лабораторної роботи №1](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/3)
 - [#4 README, REPORT і AI-документація](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/4)
 
-Робота виконується в гілці `lab01-java`; цільова гілка Java-версій продукту — `main-java`. Pull Request і його результати CI буде додано до цього розділу після відкриття PR.
+Робота виконувалася в гілці `lab01-java` і була об'єднана в `main-java` через [Pull Request #5](https://github.com/AntonLPNU/kzp-java-labs-Volos/pull/5). Усі шість перевірок CI пройшли успішно.
 
 ## Приклади роботи
 
