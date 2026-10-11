@@ -67,26 +67,32 @@ public final class Trip {
         }
     }
 
+    /** Returns the route or vehicle name. */
     public String getVehicle() {
         return vehicle;
     }
 
+    /** Returns the driver name. */
     public String getDriver() {
         return driver;
     }
 
+    /** Returns the trip distance in kilometers. */
     public double getKm() {
         return km;
     }
 
+    /** Returns the consumed fuel in liters. */
     public double getFuelLiters() {
         return fuelLiters;
     }
 
+    /** Returns the date field as supplied in the CSV. */
     public String getDate() {
         return date;
     }
 
+    /** Returns a human-readable representation independent of the system locale. */
     @Override
     public String toString() {
         return String.format(Locale.ROOT, "%s; %s; %.2f km; %.2f l; %s",
