@@ -17,11 +17,17 @@ public final class Trip {
         this.vehicle = requiredText(vehicle, "vehicle");
         this.driver = requiredText(driver, "driver");
         this.date = requiredText(date, "date");
-        if (!Double.isFinite(km) || km <= 0.0) {
-            throw new IllegalArgumentException("km must be greater than 0 and finite");
+        if (km <= 0.0) {
+            throw new IllegalArgumentException("km must be greater than 0");
         }
-        if (!Double.isFinite(fuelLiters) || fuelLiters < 0.0) {
-            throw new IllegalArgumentException("fuelLiters must not be negative and must be finite");
+        if (!Double.isFinite(km)) {
+            throw new IllegalArgumentException("km must be finite");
+        }
+        if (fuelLiters < 0.0) {
+            throw new IllegalArgumentException("fuelLiters must not be negative");
+        }
+        if (!Double.isFinite(fuelLiters)) {
+            throw new IllegalArgumentException("fuelLiters must be finite");
         }
         this.km = km;
         this.fuelLiters = fuelLiters;

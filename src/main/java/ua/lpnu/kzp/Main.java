@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -12,7 +13,6 @@ public final class Main {
     private static final String VERSION = "1.0.0";
     private static final Path DEFAULT_INPUT = Path.of("data", "input.csv");
     private static final Path DEFAULT_OUTPUT = Path.of("out", "report.txt");
-    private static final int EXPECTED_FIELD_COUNT = 5;
 
     private Main() {
     }
@@ -83,43 +83,37 @@ public final class Main {
 
     static String buildReport(Path input) throws IOException {
         List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
-        int validRows = 0;
+        List<Trip> validTrips = new ArrayList<>();
         int invalidRows = 0;
-        double totalKm = 0.0;
-        double totalFuelLiters = 0.0;
-        double longestTripKm = 0.0;
-        String longestTrip = "";
         StringBuilder report = new StringBuilder();
 
         report.append("Input file: %s%n".formatted(input));
         report.append("Rows: %d%n".formatted(lines.size()));
         for (int index = 0; index < lines.size(); index++) {
             String line = lines.get(index);
-            String[] fields = line.split(";", -1);
-
-            String error = validateTripFields(fields, index + 1);
-            if (error == null) {
-                validRows++;
-                double km = Double.parseDouble(fields[2].trim());
-                double fuelLiters = Double.parseDouble(fields[3].trim());
-                totalKm += km;
-                totalFuelLiters += fuelLiters;
-                if (km > longestTripKm) {
-                    longestTripKm = km;
-                    longestTrip = fields[0].trim();
-                }
+            try {
+                validTrips.add(Trip.fromCsv(line));
                 report.append("%2d | valid   | %s%n".formatted(index + 1, line));
-            } else {
+            } catch (IllegalArgumentException exception) {
                 invalidRows++;
-                report.append("%2d | invalid | %s | %s%n".formatted(index + 1, error, line));
+                report.append("%2d | invalid | line %d: %s | %s%n"
+                        .formatted(index + 1, index + 1, exception.getMessage(), line));
             }
         }
-        report.append("Valid rows: %d%n".formatted(validRows));
+        report.append("Valid rows: %d%n".formatted(validTrips.size()));
         report.append("Invalid rows: %d%n".formatted(invalidRows));
-        if (validRows > 0) {
-            report.append(String.format(Locale.ROOT, "Total distance: %.2f km%n", totalKm));
-            report.append(String.format(Locale.ROOT, "Average fuel consumption: %.2f l/100 km%n", fuelPer100Km(totalFuelLiters, totalKm)));
-            report.append(String.format(Locale.ROOT, "Longest trip: %s, %.2f km%n", longestTrip, longestTripKm));
+        if (!validTrips.isEmpty()) {
+            MileageFuel totals = new MileageFuel(0.0, 0.0);
+            Trip longestTrip = validTrips.get(0);
+            for (Trip trip : validTrips) {
+                totals = totals.plus(trip);
+                if (trip.getKm() > longestTrip.getKm()) {
+                    longestTrip = trip;
+                }
+            }
+            report.append(String.format(Locale.ROOT, "Total distance: %.2f km%n", totals.kilometers()));
+            report.append(String.format(Locale.ROOT, "Average fuel consumption: %.2f l/100 km%n", totals.litersPer100Km()));
+            report.append(String.format(Locale.ROOT, "Longest trip: %s, %.2f km%n", longestTrip.getVehicle(), longestTrip.getKm()));
         }
 
         return report.toString();
@@ -134,53 +128,15 @@ public final class Main {
     }
 
     static String validateTripFields(String[] fields, int lineNumber) {
-        if (fields.length != EXPECTED_FIELD_COUNT) {
-            return "line %d: expected %d fields, got %d".formatted(lineNumber, EXPECTED_FIELD_COUNT, fields.length);
-        }
-
-        String vehicle = fields[0].trim();
-        String driver = fields[1].trim();
-        String date = fields[4].trim();
-        if (vehicle.isBlank()) {
-            return "line %d: vehicle is required".formatted(lineNumber);
-        }
-        if (driver.isBlank()) {
-            return "line %d: driver is required".formatted(lineNumber);
-        }
-        if (date.isBlank()) {
-            return "line %d: date is required".formatted(lineNumber);
-        }
-
-        Double km = parseDouble(fields[2]);
-        if (km == null) {
-            return "line %d: km has invalid number format".formatted(lineNumber);
-        }
-        Double fuelLiters = parseDouble(fields[3]);
-        if (fuelLiters == null) {
-            return "line %d: fuelLiters has invalid number format".formatted(lineNumber);
-        }
-        if (km <= 0.0) {
-            return "line %d: km must be greater than 0".formatted(lineNumber);
-        }
-        if (fuelLiters < 0.0) {
-            return "line %d: fuelLiters must not be negative".formatted(lineNumber);
-        }
-
-        return null;
-    }
-
-    private static Double parseDouble(String value) {
         try {
-            return Double.parseDouble(value.trim());
-        } catch (NumberFormatException exception) {
+            Trip.fromCsv(String.join(";", fields));
             return null;
+        } catch (IllegalArgumentException exception) {
+            return "line %d: %s".formatted(lineNumber, exception.getMessage());
         }
     }
 
     static double fuelPer100Km(double fuelLiters, double km) {
-        if (km <= 0.0) {
-            throw new IllegalArgumentException("km must be greater than 0");
-        }
-        return fuelLiters / km * 100.0;
+        return new MileageFuel(km, fuelLiters).litersPer100Km();
     }
 }
