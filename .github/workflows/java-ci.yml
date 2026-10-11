@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main-java
-      - lab01-java
+      - lab02-java
   pull_request:
     branches:
       - main-java
@@ -50,11 +50,11 @@ jobs:
         run: ./mvnw -B package
 
       - name: Check application version
-        run: java -jar target/kzp-java-labs-volos-1.0.0.jar --version
+        run: java -jar target/kzp-java-labs-volos-1.1.0.jar --version
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: kzp-java-labs-volos-${{ matrix.os }}-${{ github.run_number }}
-          path: target/kzp-java-labs-volos-1.0.0.jar
+          path: target/kzp-java-labs-volos-1.1.0.jar
           if-no-files-found: error

@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.charset.StandardCharsets;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -109,6 +110,20 @@ class MainTest {
         assertTrue(report.contains("Total distance: 375.10 km"));
         assertTrue(report.contains("Average fuel consumption: 22.71 l/100 km"));
         assertTrue(report.contains("Longest trip: Львів 2 - Сокаль 16:20, 78.00 km"));
+    }
+
+    @Test
+    void invalidTripsNeverEnterStatistics(@TempDir Path tempDir) throws IOException {
+        Path input = tempDir.resolve("invalid.csv");
+        Files.writeString(input, "Route;Driver;NaN;1;date\nRoute;Driver;0;1;date\n", StandardCharsets.UTF_8);
+
+        String report = Main.buildReport(input);
+
+        assertTrue(report.contains("Valid rows: 0"));
+        assertTrue(report.contains("Invalid rows: 2"));
+        assertTrue(report.contains("line 1: km must be finite"));
+        assertTrue(report.contains("line 2: km must be greater than 0"));
+        assertTrue(!report.contains("Total distance:"));
     }
 
     @Test
