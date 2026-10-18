@@ -13,7 +13,7 @@ public record MileageFuel(double kilometers, double fuelLiters) {
 
     /** Returns a new total that includes one trip. */
     public MileageFuel plus(Trip trip) {
-        return new MileageFuel(kilometers + trip.getKm(), fuelLiters + trip.getFuelLiters());
+        return new MileageFuel(kilometers + trip.getKm(), fuelLiters + trip.calculatedFuelLiters());
     }
 
     /** Computes liters per 100 km, requiring a positive distance. */
