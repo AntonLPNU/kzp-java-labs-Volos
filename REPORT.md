@@ -240,7 +240,18 @@ Workflow CI успішно пройшов на Windows, macOS та Ubuntu піс
 
 ## GitHub Issues і Pull Request
 
-Робота ведеться в одній гілці `lab03-java`, з логічними комітами моделі/тестів та документації/версії. Створення GitHub Issue через доступну інтеграцію повернуло HTTP 403, тому номерів Issue поки немає; ця частина процесу потребує ручного створення тікетів у репозиторії. У PR необхідно описати ієрархію, формулу, збереження звіту й результати трьох ОС.
+Робота ведеться в одній гілці `lab03-java`. Коміт [`16a9631`](https://github.com/AntonLPNU/kzp-java-labs-Volos/commit/16a9631) додає модель, тестові дані й перевірки; [`7a7c781`](https://github.com/AntonLPNU/kzp-java-labs-Volos/commit/7a7c781) оновлює версію, CI та документацію. Issues студент створив через GitHub після цих комітів, коли інтеграція асистента повернула HTTP 403. Вони документують виконані частини й перевірки, а не видаються за тікети, створені до написання коду.
+
+| Issue | Зміна | Перевірка |
+| --- | --- | --- |
+| [#11 Спільний тип Trip](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/11) | Спільні поля, інваріанти, фабрика | Старі тести `TripTest`; `verify` |
+| [#12 PassengerTrip і CargoTrip](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/12) | Два підтипи, поліморфний розрахунок | `TripHierarchyTest.polymorphicCollectionUsesSubtypeFuelCalculation` |
+| [#13 Категорії TripKind](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/13) | Фіксовані категорії та підписи | `TripHierarchyTest.factoryBuildsBothSubtypesFromFiveFields` |
+| [#14 Рівність рейсів](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/14) | `equals/hashCode` з урахуванням підтипу й вантажу | `TripHierarchyTest.equalityAndHashSetIncludeSubtypeAndCargoLoad` |
+| [#15 Тести та сумісність](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/15) | Нові тести й старий контрольний звіт | 28 тестів; збіг SHA-256 звіту |
+| [#16 Документація та CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/16) | README, REPORT, `1.2.0`, workflow | Локальні `test`, `verify`, `package`; GitHub CI після PR |
+
+У PR необхідно описати ієрархію, формулу, збереження звіту й результати трьох ОС. Посилання на PR та зелений CI додамо після перевірки на GitHub.
 
 ## Академічна доброчесність
 
