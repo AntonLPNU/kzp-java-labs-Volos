@@ -119,7 +119,7 @@ public final class Main {
 
     static String buildReport(Path input) throws IOException {
         List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
-        List<Trip> validTrips = new ArrayList<>();
+        Repository<Trip> tripRepository = new Repository<>();
         int invalidRows = 0;
         StringBuilder report = new StringBuilder();
 
@@ -128,7 +128,7 @@ public final class Main {
         for (int index = 0; index < lines.size(); index++) {
             String line = lines.get(index);
             try {
-                validTrips.add(Trip.fromCsv(line));
+                tripRepository.add(Trip.fromCsv(line));
                 report.append("%2d | valid   | %s%n".formatted(index + 1, line));
             } catch (IllegalArgumentException exception) {
                 invalidRows++;
@@ -136,6 +136,7 @@ public final class Main {
                         .formatted(index + 1, index + 1, exception.getMessage(), line));
             }
         }
+        List<Trip> validTrips = tripRepository.all();
         report.append("Valid rows: %d%n".formatted(validTrips.size()));
         report.append("Invalid rows: %d%n".formatted(invalidRows));
         if (!validTrips.isEmpty()) {

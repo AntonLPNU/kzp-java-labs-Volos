@@ -22,7 +22,8 @@ class CsvStorageTest {
             throws Exception {
         Path path = directory.resolve("nested/trips.csv");
         List<TripRecord> expected = List.of(
-                record("Маршрут, \"нічний\"\nрейс"), record("Звичайне авто"));
+                record("Маршрут, \"нічний\"\nрейс"), record("Звичайне авто"),
+                record("Маршрут із комою, другий"), record("Авто 4"), record("Авто 5"));
 
         TripCsvStorage.save(path, expected);
 
@@ -112,6 +113,22 @@ class CsvStorageTest {
         Trip cargo = restored.get(1).toTrip();
         assertTrue(cargo instanceof CargoTrip);
         assertEquals(22.0, cargo.calculatedFuelLiters(), 0.001);
+    }
+
+    @Test
+    void roundTripCollectionWithMalformedSourceRow(@TempDir Path directory) throws Exception {
+        Path input = directory.resolve("input.csv");
+        Path output = directory.resolve("round-trip.csv");
+        Files.writeString(input, "Route, one;Driver;120;15;2026-10-01\n"
+                + "Route two;Driver;90;10;2026-10-02\n"
+                + "Route three;Driver;70;8;2026-10-03\n"
+                + "Route four;Driver;60;7;2026-10-04\n"
+                + "Route five;Driver;50;6;2026-10-05\n"
+                + "Route broken;Driver;not-a-number;1;2026-10-06\n");
+
+        assertEquals(1, Main.exportCsv(input, output));
+        assertEquals(5, TripCsvStorage.load(output).size());
+        assertTrue(Files.readString(output).contains("\"Route, one\""));
     }
 
     private static TripRecord record(String vehicle) {
