@@ -78,11 +78,11 @@
 java -jar target\kzp-java-labs-volos-1.2.0.jar --version
 ```
 
-CI на GitHub для документаційного коміту ще має пройти після push; результат трьох платформ буде додано після завершення workflow.
+GitHub Actions для коміту `1c59dde` завершився успішно на Ubuntu, Windows і macOS: [workflow run](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39123386296).
 
 ## 10. GitHub Issues, гілка та PR
 
-Робота виконується в окремій гілці `lab04-java`, створеній від `main-java` після злиття ЛР3. Коміти реалізації: `21f48bc` (запити Stream API) і `7a38a66` (використання статистики Stream API у звіті застосунку). Для відстеження робіт створено Issues: [#23 запити Stream API](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/23), [#24 Top-N і компаратор](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/24), [#25 пошук через Optional](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/25), [#26 тести та звірка з циклом](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/26), [#27 звіт, README і збірка](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/27). Їх буде пов'язано з PR для ЛР4.
+Робота виконується в окремій гілці `lab04-java`, створеній від `main-java` після злиття ЛР3. Коміти реалізації: `21f48bc` (запити Stream API) і `7a38a66` (використання статистики Stream API у звіті застосунку). Для відстеження робіт створено Issues: [#23 запити Stream API](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/23), [#24 Top-N і компаратор](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/24), [#25 пошук через Optional](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/25), [#26 тести та звірка з циклом](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/26), [#27 звіт, README і збірка](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/27). Зміни подані на розгляд у [PR #28](https://github.com/AntonLPNU/kzp-java-labs-Volos/pull/28), який закриє ці Issues після злиття.
 
 ## 11. Використання ШІ та внесок студента
 
