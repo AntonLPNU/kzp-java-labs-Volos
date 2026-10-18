@@ -10,7 +10,7 @@ import java.util.Locale;
 
 /** Entry point for the lab Java console application. */
 public final class Main {
-    private static final String VERSION = "1.1.0";
+    private static final String VERSION = "1.2.0";
     private static final Path DEFAULT_INPUT = Path.of("data", "input.csv");
     private static final Path DEFAULT_OUTPUT = Path.of("out", "report.txt");
 
@@ -47,7 +47,7 @@ public final class Main {
 
     static String helpText() {
         return """
-                Usage: java -jar target/kzp-java-labs-volos-1.1.0.jar [--help] [--version] [--input <file>] [--output <file>]
+                Usage: java -jar target/kzp-java-labs-volos-1.2.0.jar [--help] [--version] [--input <file>] [--output <file>]
 
                 Options:
                   --help           Show this help message.
