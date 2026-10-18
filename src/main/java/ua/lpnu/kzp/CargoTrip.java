@@ -5,6 +5,7 @@ import java.util.Objects;
 /** A cargo trip with an illustrative load-dependent fuel estimate. */
 public final class CargoTrip extends Trip {
     private final double loadKg;
+    private final double calculatedFuelLiters;
 
     /** Creates a cargo trip with a positive finite load in kilograms. */
     public CargoTrip(String vehicle, String driver, double km, double fuelLiters, String date, double loadKg) {
@@ -13,6 +14,10 @@ public final class CargoTrip extends Trip {
             throw new IllegalArgumentException("loadKg must be finite and greater than 0");
         }
         this.loadKg = loadKg;
+        this.calculatedFuelLiters = getFuelLiters() * (1.0 + loadKg / 10_000.0);
+        if (!Double.isFinite(calculatedFuelLiters)) {
+            throw new IllegalArgumentException("calculated fuel must be finite");
+        }
     }
 
     /** Returns the carried load in kilograms. */
@@ -23,7 +28,7 @@ public final class CargoTrip extends Trip {
     /** Estimates cargo fuel with an illustrative 10% increase per metric ton. */
     @Override
     public double calculatedFuelLiters() {
-        return getFuelLiters() * (1.0 + loadKg / 10_000.0);
+        return calculatedFuelLiters;
     }
 
     /** Includes cargo load in logical equality. */

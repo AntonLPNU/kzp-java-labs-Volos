@@ -56,6 +56,8 @@ class TripHierarchyTest {
                 () -> Trip.fromCsv("CARGO:1000kg;Driver;1;1;date"));
         assertThrows(IllegalArgumentException.class,
                 () -> Trip.fromCsv("CARGO:0kg Route;Driver;1;1;date"));
+        assertThrows(IllegalArgumentException.class,
+                () -> new CargoTrip("Route", "Driver", 1, Double.MAX_VALUE, "date", 1000));
     }
 
     @Test
