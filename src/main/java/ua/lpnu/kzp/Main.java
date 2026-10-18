@@ -5,6 +5,8 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Locale;
 
@@ -103,16 +105,17 @@ public final class Main {
         report.append("Valid rows: %d%n".formatted(validTrips.size()));
         report.append("Invalid rows: %d%n".formatted(invalidRows));
         if (!validTrips.isEmpty()) {
-            MileageFuel totals = new MileageFuel(0.0, 0.0);
-            Trip longestTrip = validTrips.get(0);
-            for (Trip trip : validTrips) {
-                totals = totals.plus(trip);
-                if (trip.getKm() > longestTrip.getKm()) {
-                    longestTrip = trip;
-                }
-            }
-            report.append(String.format(Locale.ROOT, "Total distance: %.2f km%n", totals.kilometers()));
-            report.append(String.format(Locale.ROOT, "Average fuel consumption: %.2f l/100 km%n", totals.litersPer100Km()));
+            DoubleSummaryStatistics distance = TripQueries.distanceStatistics(validTrips);
+            double totalFuel = validTrips.stream()
+                    .mapToDouble(Trip::calculatedFuelLiters)
+                    .sum();
+            Trip longestTrip = validTrips.stream()
+                    .max(Comparator.comparingDouble(Trip::getKm))
+                    .orElseThrow();
+
+            report.append(String.format(Locale.ROOT, "Total distance: %.2f km%n", distance.getSum()));
+            report.append(String.format(Locale.ROOT, "Average fuel consumption: %.2f l/100 km%n",
+                    totalFuel / distance.getSum() * 100.0));
             report.append(String.format(Locale.ROOT, "Longest trip: %s, %.2f km%n", longestTrip.getVehicle(), longestTrip.getKm()));
         }
 
