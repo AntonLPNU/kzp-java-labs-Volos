@@ -19,7 +19,7 @@ class MileageFuelTest {
     @Test
     void plusCreatesNewTotal() {
         MileageFuel initial = new MileageFuel(0, 0);
-        MileageFuel total = initial.plus(new Trip("Route", "Driver", 25, 5, "date"));
+        MileageFuel total = initial.plus(new PassengerTrip("Route", "Driver", 25, 5, "date"));
 
         assertNotSame(initial, total);
         assertEquals(new MileageFuel(25, 5), total);

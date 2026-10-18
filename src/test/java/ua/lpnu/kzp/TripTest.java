@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class TripTest {
     @Test
     void constructorStoresNormalizedFields() {
-        Trip trip = new Trip(" Route ", " Driver ", 29.4, 6.8, " 2026-09-10 ");
+        Trip trip = new PassengerTrip(" Route ", " Driver ", 29.4, 6.8, " 2026-09-10 ");
 
         assertEquals("Route", trip.getVehicle());
         assertEquals("Driver", trip.getDriver());
@@ -21,21 +21,21 @@ class TripTest {
 
     @Test
     void constructorRejectsMissingText() {
-        assertThrows(IllegalArgumentException.class, () -> new Trip(null, "Driver", 1, 0, "date"));
-        assertThrows(IllegalArgumentException.class, () -> new Trip(" ", "Driver", 1, 0, "date"));
-        assertThrows(IllegalArgumentException.class, () -> new Trip("Route", null, 1, 0, "date"));
-        assertThrows(IllegalArgumentException.class, () -> new Trip("Route", " ", 1, 0, "date"));
-        assertThrows(IllegalArgumentException.class, () -> new Trip("Route", "Driver", 1, 0, null));
-        assertThrows(IllegalArgumentException.class, () -> new Trip("Route", "Driver", 1, 0, " "));
+        assertThrows(IllegalArgumentException.class, () -> new PassengerTrip(null, "Driver", 1, 0, "date"));
+        assertThrows(IllegalArgumentException.class, () -> new PassengerTrip(" ", "Driver", 1, 0, "date"));
+        assertThrows(IllegalArgumentException.class, () -> new PassengerTrip("Route", null, 1, 0, "date"));
+        assertThrows(IllegalArgumentException.class, () -> new PassengerTrip("Route", " ", 1, 0, "date"));
+        assertThrows(IllegalArgumentException.class, () -> new PassengerTrip("Route", "Driver", 1, 0, null));
+        assertThrows(IllegalArgumentException.class, () -> new PassengerTrip("Route", "Driver", 1, 0, " "));
     }
 
     @Test
     void constructorRejectsInvalidMeasurements() {
         for (double km : new double[] {0, -1, Double.NaN, Double.POSITIVE_INFINITY}) {
-            assertThrows(IllegalArgumentException.class, () -> new Trip("Route", "Driver", km, 0, "date"));
+            assertThrows(IllegalArgumentException.class, () -> new PassengerTrip("Route", "Driver", km, 0, "date"));
         }
         for (double fuel : new double[] {-1, Double.NaN, Double.NEGATIVE_INFINITY}) {
-            assertThrows(IllegalArgumentException.class, () -> new Trip("Route", "Driver", 1, fuel, "date"));
+            assertThrows(IllegalArgumentException.class, () -> new PassengerTrip("Route", "Driver", 1, fuel, "date"));
         }
     }
 
