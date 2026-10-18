@@ -3,7 +3,9 @@ package ua.lpnu.kzp;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.DoubleSummaryStatistics;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -95,5 +97,55 @@ class TripQueriesTest {
         TripQueries.topTrips(data, 5);
         TripQueries.fuelByVehicle(data);
         assertEquals(before, data);
+    }
+
+    @Test
+    void streamQueriesMatchLoopReference() {
+        List<Trip> data = trips();
+        List<Trip> longTrips = new ArrayList<>();
+        List<String> vehicleNames = new ArrayList<>();
+        Map<String, double[]> totalsByVehicle = new HashMap<>();
+        double totalKm = 0.0;
+        double minKm = Double.POSITIVE_INFINITY;
+        double maxKm = Double.NEGATIVE_INFINITY;
+        Trip found = null;
+
+        for (Trip trip : data) {
+            if (trip.getKm() > 100.0) {
+                longTrips.add(trip);
+            }
+            vehicleNames.add(trip.getVehicle());
+            totalKm += trip.getKm();
+            minKm = Math.min(minKm, trip.getKm());
+            maxKm = Math.max(maxKm, trip.getKm());
+            double[] totals = totalsByVehicle.computeIfAbsent(trip.getVehicle(), ignored -> new double[2]);
+            totals[0] += trip.getKm();
+            totals[1] += trip.calculatedFuelLiters();
+            if (found == null && trip.getVehicle().equals("Bus A")
+                    && trip.getDate().equals("2026-09-03")) {
+                found = trip;
+            }
+        }
+
+        List<Trip> expectedTop = new ArrayList<>(data);
+        expectedTop.sort(Comparator.comparingDouble(Trip::getKm)
+                .reversed()
+                .thenComparing(Trip::getDate));
+
+        DoubleSummaryStatistics actualStatistics = TripQueries.distanceStatistics(data);
+        Map<String, Double> actualFuelByVehicle = TripQueries.fuelByVehicle(data);
+
+        assertEquals(longTrips, TripQueries.longTrips(data));
+        assertEquals(vehicleNames, TripQueries.vehicleNames(data));
+        assertEquals(totalKm, actualStatistics.getSum(), 0.0001);
+        assertEquals(minKm, actualStatistics.getMin(), 0.0001);
+        assertEquals(maxKm, actualStatistics.getMax(), 0.0001);
+        for (Map.Entry<String, double[]> entry : totalsByVehicle.entrySet()) {
+            double[] totals = entry.getValue();
+            assertEquals(totals[1] / totals[0] * 100.0,
+                    actualFuelByVehicle.get(entry.getKey()), 0.0001);
+        }
+        assertEquals(expectedTop.subList(0, 5), TripQueries.topTrips(data, 5));
+        assertSame(found, TripQueries.findTrip(data, "Bus A", "2026-09-03").orElseThrow());
     }
 }
