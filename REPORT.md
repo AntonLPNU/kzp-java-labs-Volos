@@ -77,9 +77,9 @@ CSV не отримав шосту колонку: вантаж кодуєтьс
 
 `pyproject.toml` об'єднує модулі ЛР6 і ЛР7 в один wheel `kzp-python-labs-volos` версії `1.1.0` та надає команди `kzp-lab06` і `kzp-lab07`. Віртуальне середовище створюється через `python -m venv .venv`; dev-залежності — pytest, Ruff і build.
 
-Локально зібрані sdist і wheel, а wheel встановлено без залежностей в окреме чисте середовище; встановлена команда `kzp-lab07` успішно обробила CSV. CLI перевірено на правильний файл і на відсутній файл. Python CI перевіряє pytest, Ruff, форматування та wheel на Ubuntu, Windows і macOS та завантажує wheel як артефакт. Посилання на перевірки та артефакт буде додано після PR.
+Локально зібрані sdist і wheel, а wheel встановлено без залежностей в окреме чисте середовище; встановлена команда `kzp-lab07` успішно обробила CSV. CLI перевірено на правильний файл і на відсутній файл. Python CI перевіряє pytest, Ruff, форматування та wheel на Ubuntu, Windows і macOS та завантажує wheel як артефакт. Усі перевірки Python CI та Java CI пройшли: [Python CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39252640622), [Java CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39252640575).
 
-Версія Python-пакета оновлена з `1.0.0` до `1.1.0`; Java-версія `1.2.0` не змінювалась. Теги `v1.0.0` і `v1.1.0` у репозиторії є попередніми Java-релізами, тому для Python-пакета їх не перевикористано.
+Версія Python-пакета оновлена з `1.0.0` до `1.1.0`; Java-версія `1.2.0` не змінювалась. Релізи Python позначені окремими тегами: [ЛР6 `python-v1.0.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/python-v1.0.0) і [ЛР7 `python-v1.1.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/python-v1.1.0). Теги `v1.0.0` і `v1.1.0` залишаються попередніми Java-релізами.
 
 ## 10. GitHub Issues і Pull Request
 

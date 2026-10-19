@@ -124,7 +124,7 @@ Java-код, `pom.xml`, `data/input.csv` і Java CI не замінюються 
 - [#41 pyproject, документація та wheel](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/41)
 - [#42 Python CI для трьох ОС](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/42)
 
-[Pull Request #43](https://github.com/AntonLPNU/kzp-java-labs-Volos/pull/43) спрямований у `main-java`. Усі перевірки Python CI та Java CI для трьох операційних систем успішні.
+[Pull Request #43](https://github.com/AntonLPNU/kzp-java-labs-Volos/pull/43) спрямований у `main-java`. Усі перевірки Python CI та Java CI для трьох операційних систем успішні. Версію Python-пакета `1.0.0` позначено [тегом `python-v1.0.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/python-v1.0.0), який указує на злиття ЛР6.
 
 ## 14. Використання ШІ
 

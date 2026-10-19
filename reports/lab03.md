@@ -57,7 +57,7 @@
 
 ## 10. Інфраструктура
 
-Збережено Maven Wrapper, Java 21, JUnit, SpotBugs, виконуваний JAR через Shade Plugin та GitHub Actions. Локальні `test`, `verify` і `package` пройшли; JAR 1.2.0 запущено, `--version` перевірено. [Запуск CI на трьох ОС](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39119373623) для коміту `49748c3` завершився успішно; опубліковано JAR для Windows, Ubuntu і macOS. Приклад [JAR-артефакта Windows](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39119373623/artifacts/12133478105). Тег `v1.2.0` станом на перевірку не створено, тому посилання на нього немає.
+Збережено Maven Wrapper, Java 21, JUnit, SpotBugs, виконуваний JAR через Shade Plugin та GitHub Actions. Локальні `test`, `verify` і `package` пройшли; JAR 1.2.0 запущено, `--version` перевірено. [Запуск CI на трьох ОС](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39119373623) для коміту `49748c3` завершився успішно; опубліковано JAR для Windows, Ubuntu і macOS. Приклад [JAR-артефакта Windows](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39119373623/artifacts/12133478105). Java-реліз версії `1.2.0` позначено [тегом `v1.2.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/v1.2.0), який указує на злиття ЛР3 у PR #21.
 
 ## 11. GitHub Issues і Pull Request
 
