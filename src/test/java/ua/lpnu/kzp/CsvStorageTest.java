@@ -131,6 +131,15 @@ class CsvStorageTest {
         assertTrue(Files.readString(output).contains("\"Route, one\""));
     }
 
+    @Test
+    void committedRoundTripSampleLoadsFiveRecords() throws Exception {
+        List<TripRecord> records = TripCsvStorage.load(Path.of("data", "lab05-roundtrip.csv"));
+
+        assertEquals(5, records.size());
+        assertTrue(records.get(0).getDriver().contains("\"Тест\""));
+        assertTrue(records.get(2).getVehicle().contains("\n"));
+    }
+
     private static TripRecord record(String vehicle) {
         return new TripRecord(vehicle, "Водій", LocalDate.of(2026, 10, 1), 105.0, 12.5);
     }
