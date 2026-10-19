@@ -71,13 +71,13 @@ CSV-колонки впорядковані за назвами Java-полів 
 .\mvnw.cmd -B verify
 ```
 
-На момент підготовки цього звіту пройшли 53 тести, SpotBugs не виявив помилок чи попереджень, Maven завершився з `BUILD SUCCESS`. JAR версії `1.2.0` запущений з `--version` і з `--csv`; останній створив CSV із 8 рядками та вказав 4 пропущені некоректні рядки. Перевірки CI для трьох ОС слід підтвердити в GitHub Actions після створення PR.
+На момент підготовки цього звіту пройшли 54 тести, SpotBugs не виявив помилок чи попереджень, Maven завершився з `BUILD SUCCESS`. JAR версії `1.2.0` запущений з `--version` і з `--csv`; останній створив CSV із 8 рядками та вказав 4 пропущені некоректні рядки. GitHub Actions run [#41](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39247137393) успішно завершився на Ubuntu, Windows і macOS.
 
 ## 10. GitHub і послідовність роботи
 
 Робота ведеться в окремій гілці `lab05-java`, створеній від `main-java`. Для вимог створено Issues: [#29 Repository і виняток](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/29), [#30 TripRecord та анотації](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/30), [#31 універсальний експортер](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/31), [#32 парсер і відновлення](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/32), [#33 інтеграція](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/33), [#34 тести](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/34), [#35 документація та CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/35).
 
-Логічні коміти гілки: `41cf277` (сховище й виняток), `ce4e2a3` (запис і анотації), `e74f859` (CSV-експортер, парсер, сховище й round-trip). Pull Request буде створений після завершення документації та фінальної перевірки; CI до його запуску не стверджується.
+Логічні коміти гілки: `41cf277` (сховище й виняток), `ce4e2a3` (запис і анотації), `e74f859` (CSV-експортер, парсер, сховище й round-trip), `48faac1` (звіт і інтеграція), `07b55c1` (перевірка прикладу). Роботу подано на розгляд у [PR #36](https://github.com/AntonLPNU/kzp-java-labs-Volos/pull/36), який закриє перелічені Issues після злиття. PR не має конфліктів, а GitHub Actions run #41 пройшов на Ubuntu, Windows і macOS.
 
 ## 11. Використання ШІ та внесок студента
 
