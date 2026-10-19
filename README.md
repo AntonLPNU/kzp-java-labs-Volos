@@ -74,7 +74,7 @@ ruff format --check .
 python -m build
 ```
 
-Докладний звіт поточної ЛР7 розміщено у [`REPORT.md`](REPORT.md); звіти ЛР1-6 лежать у [`reports/`](reports/).
+Докладний звіт поточної ЛР7 розміщено у [`REPORT.md`](REPORT.md); звіти ЛР1-6 лежать у [`reports/`](reports/). Загальний огляд усіх семи робіт — у [`FINAL_REPORT.md`](FINAL_REPORT.md).
 
 ## Запуск
 
