@@ -107,7 +107,7 @@ python -m kzp_lab06.cli data\\lab06-input.csv out\\lab06-report.txt
   Львів-Сокаль: 240.00 км
 ```
 
-GitHub Actions для Ubuntu, Windows і macOS буде перевірено після публікації гілки та створення Pull Request.
+GitHub Actions пройшов на всіх трьох ОС: [Python CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39249775795) та [Java CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39249775809).
 
 ## 12. Зміни до попередніх лабораторних
 
@@ -124,7 +124,7 @@ Java-код, `pom.xml`, `data/input.csv` і Java CI не замінюються 
 - [#41 pyproject, документація та wheel](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/41)
 - [#42 Python CI для трьох ОС](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/42)
 
-Посилання на PR і результати GitHub Actions: буде внесено після створення PR та завершення перевірок.
+[Pull Request #43](https://github.com/AntonLPNU/kzp-java-labs-Volos/pull/43) спрямований у `main-java`. Усі перевірки Python CI та Java CI для трьох операційних систем успішні.
 
 ## 14. Використання ШІ
 
