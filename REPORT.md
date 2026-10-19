@@ -92,7 +92,7 @@ CSV не отримав шосту колонку: вантаж кодуєтьс
 | [#48](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/48) | тести, Ruff і wheel | pytest, lint/format, isolated install |
 | [#49](https://github.com/AntonLPNU/kzp-java-labs-Volos/issues/49) | README, REPORT та CI | документація і три ОС |
 
-Pull Request у `main-java`: буде внесено після публікації гілки.
+[Pull Request #50](https://github.com/AntonLPNU/kzp-java-labs-Volos/pull/50) спрямовано в `main-java`. Усі три Python CI jobs і всі три Java CI jobs пройшли успішно: [Python CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39252640622), [Java CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39252640575).
 
 ## 11. Академічна доброчесність
 
