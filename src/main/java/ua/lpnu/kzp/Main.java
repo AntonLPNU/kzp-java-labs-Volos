@@ -41,7 +41,12 @@ public final class Main {
             String report = buildReport(input);
             System.out.print(report);
             writeReport(output, report);
-        } catch (IllegalArgumentException | IOException exception) {
+            Path csvOutput = csvOutputPath(args);
+            if (csvOutput != null) {
+                int skippedRows = exportCsv(input, csvOutput);
+                System.out.printf("CSV export: %s; skipped invalid rows: %d%n", csvOutput, skippedRows);
+            }
+        } catch (DataStorageException | IllegalArgumentException | IOException exception) {
             System.err.printf("Error: %s%n", exception.getMessage());
             System.exit(1);
         }
@@ -49,13 +54,14 @@ public final class Main {
 
     static String helpText() {
         return """
-                Usage: java -jar target/kzp-java-labs-volos-1.2.0.jar [--help] [--version] [--input <file>] [--output <file>]
+                Usage: java -jar target/kzp-java-labs-volos-1.2.0.jar [--help] [--version] [--input <file>] [--output <file>] [--csv <file>]
 
                 Options:
                   --help           Show this help message.
                   --version        Show application version.
                   --input <file>   Path to input CSV file. Default: data/input.csv.
                   --output <file>  Path to report file. Default: out/report.txt.
+                  --csv <file>     Export valid trips to annotated UTF-8 CSV. Optional.
                 """;
     }
 
@@ -83,9 +89,37 @@ public final class Main {
         return DEFAULT_OUTPUT;
     }
 
+    static Path csvOutputPath(String[] args) {
+        for (int index = 0; index < args.length; index++) {
+            if ("--csv".equals(args[index])) {
+                if (index + 1 >= args.length) {
+                    throw new IllegalArgumentException("Missing value for --csv");
+                }
+                return Path.of(args[index + 1]);
+            }
+        }
+        return null;
+    }
+
+    /** Exports valid legacy input rows and returns the number intentionally skipped. */
+    static int exportCsv(Path input, Path output) throws IOException, DataStorageException {
+        List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
+        List<TripRecord> records = new ArrayList<>();
+        int skippedRows = 0;
+        for (String line : lines) {
+            try {
+                records.add(TripRecord.fromTrip(Trip.fromCsv(line)));
+            } catch (IllegalArgumentException exception) {
+                skippedRows++;
+            }
+        }
+        TripCsvStorage.save(output, records);
+        return skippedRows;
+    }
+
     static String buildReport(Path input) throws IOException {
         List<String> lines = Files.readAllLines(input, StandardCharsets.UTF_8);
-        List<Trip> validTrips = new ArrayList<>();
+        Repository<Trip> tripRepository = new Repository<>();
         int invalidRows = 0;
         StringBuilder report = new StringBuilder();
 
@@ -94,7 +128,7 @@ public final class Main {
         for (int index = 0; index < lines.size(); index++) {
             String line = lines.get(index);
             try {
-                validTrips.add(Trip.fromCsv(line));
+                tripRepository.add(Trip.fromCsv(line));
                 report.append("%2d | valid   | %s%n".formatted(index + 1, line));
             } catch (IllegalArgumentException exception) {
                 invalidRows++;
@@ -102,6 +136,7 @@ public final class Main {
                         .formatted(index + 1, index + 1, exception.getMessage(), line));
             }
         }
+        List<Trip> validTrips = tripRepository.all();
         report.append("Valid rows: %d%n".formatted(validTrips.size()));
         report.append("Invalid rows: %d%n".formatted(invalidRows));
         if (!validTrips.isEmpty()) {

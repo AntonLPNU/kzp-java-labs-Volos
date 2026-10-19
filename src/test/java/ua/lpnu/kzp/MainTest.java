@@ -19,6 +19,7 @@ class MainTest {
 
         assertTrue(help.contains("--input"));
         assertTrue(help.contains("--output"));
+        assertTrue(help.contains("--csv"));
     }
 
     @Test
@@ -38,6 +39,13 @@ class MainTest {
         Path output = Main.outputPath(new String[] {"--output", "out/custom-report.txt"});
 
         assertTrue(output.endsWith(Path.of("out", "custom-report.txt")));
+    }
+
+    @Test
+    void csvOutputPathIsOptionalAndUsesCommandLineValue() {
+        assertNull(Main.csvOutputPath(new String[0]));
+        assertEquals(Path.of("out", "trips.csv"),
+                Main.csvOutputPath(new String[] {"--csv", "out/trips.csv"}));
     }
 
     @Test

@@ -1,0 +1,14 @@
+package ua.lpnu.kzp;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+/** Declares the CSV header for a field exported by {@link CsvExporter}. */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface CsvColumn {
+    /** Returns the CSV column header. */
+    String value();
+}
