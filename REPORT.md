@@ -6,7 +6,7 @@
 - Студент: Антон Волос; варіант 7; ОС розробки: Windows; Python 3.12.10.
 - Предметна область: навчальний журнал пасажирських і вантажних рейсів автопарку.
 - Спільний Python-пакет: `kzp-python-labs-volos`, версія `1.1.0`.
-- Java-застосунок лишається версії `1.2.0`; його версію та код не змінювали.
+- Java-застосунок лишається версії `1.2.0`; після ЛР7 його код було додатково відрефакторено за зауваженням викладача.
 
 ЛР7 виконана в окремій гілці `lab07-python`. Вона продовжує Python-частину ЛР6 у тому самому репозиторії, але не викликає Java і не змінює Java CSV `data/input.csv`. Звіти ЛР1-6 збережені в каталозі `reports/`.
 
@@ -79,7 +79,7 @@ CSV не отримав шосту колонку: вантаж кодуєтьс
 
 Локально зібрані sdist і wheel, а wheel встановлено без залежностей в окреме чисте середовище; встановлена команда `kzp-lab07` успішно обробила CSV. CLI перевірено на правильний файл і на відсутній файл. Python CI перевіряє pytest, Ruff, форматування та wheel на Ubuntu, Windows і macOS та завантажує wheel як артефакт. Усі перевірки Python CI та Java CI пройшли: [Python CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39252640622), [Java CI](https://github.com/AntonLPNU/kzp-java-labs-Volos/actions/runs/39252640575).
 
-Версія Python-пакета оновлена з `1.0.0` до `1.1.0`; Java-версія `1.2.0` не змінювалась. Релізи Python позначені окремими тегами: [ЛР6 `python-v1.0.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/python-v1.0.0) і [ЛР7 `python-v1.1.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/python-v1.1.0). Теги `v1.0.0` і `v1.1.0` залишаються попередніми Java-релізами.
+Версія Python-пакета оновлена з `1.0.0` до `1.1.0`; Java-версія `1.2.0` не змінювалась. Після ЛР7 за зауваженням викладача Java-точку входу спрощено: `Main` передає аргументи `ApplicationController`, `CommandLineParser` окремо розбирає параметри, а `TripReportService` виконує обробку й формує звіт. Джерелом Java-версії є лише `pom.xml`; Maven підставляє її в ресурс, який читає `--version`. Це виправлення внесене до `main-java` і гілок ЛР2-7; історичні гілки ЛР1 збережені без змін відповідно до вимоги, що малий `Main` обов'язковий починаючи з ЛР2. Релізи Python позначені окремими тегами: [ЛР6 `python-v1.0.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/python-v1.0.0) і [ЛР7 `python-v1.1.0`](https://github.com/AntonLPNU/kzp-java-labs-Volos/tree/python-v1.1.0). Теги `v1.0.0` і `v1.1.0` залишаються попередніми Java-релізами.
 
 ## 10. GitHub Issues і Pull Request
 
