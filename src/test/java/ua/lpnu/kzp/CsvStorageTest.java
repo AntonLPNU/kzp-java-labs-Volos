@@ -106,7 +106,7 @@ class CsvStorageTest {
                 + "CARGO:1000kg Truck;Driver;130;20;2026-10-02\n"
                 + "bad;line\n");
 
-        assertEquals(1, Main.exportCsv(input, output));
+        assertEquals(1, new TripReportService().exportCsv(input, output));
         List<TripRecord> restored = TripCsvStorage.load(output);
         assertEquals(2, restored.size());
         assertTrue(restored.get(0).toTrip() instanceof PassengerTrip);
@@ -126,7 +126,7 @@ class CsvStorageTest {
                 + "Route five;Driver;50;6;2026-10-05\n"
                 + "Route broken;Driver;not-a-number;1;2026-10-06\n");
 
-        assertEquals(1, Main.exportCsv(input, output));
+        assertEquals(1, new TripReportService().exportCsv(input, output));
         assertEquals(5, TripCsvStorage.load(output).size());
         assertTrue(Files.readString(output).contains("\"Route, one\""));
     }
