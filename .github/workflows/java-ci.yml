@@ -49,12 +49,33 @@ jobs:
         if: runner.os != 'Windows'
         run: ./mvnw -B package
 
-      - name: Check application version
-        run: java -jar target/kzp-java-labs-volos-1.2.0.jar --version
+      - name: Resolve project version on Windows
+        if: runner.os == 'Windows'
+        run: |
+          $version = .\mvnw.cmd -q help:evaluate "-Dexpression=project.version" -DforceStdout
+          "PROJECT_VERSION=$version" >> $env:GITHUB_ENV
+
+      - name: Resolve project version on Unix
+        if: runner.os != 'Windows'
+        run: echo "PROJECT_VERSION=$(./mvnw -q help:evaluate -Dexpression=project.version -DforceStdout)" >> "$GITHUB_ENV"
+
+      - name: Check application version on Windows
+        if: runner.os == 'Windows'
+        run: |
+          $jar = "target/kzp-java-labs-volos-$env:PROJECT_VERSION.jar"
+          $actual = java -jar $jar --version
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          if ($actual -ne "kzp-java-labs-volos $env:PROJECT_VERSION") { throw "Unexpected application version: $actual" }
+
+      - name: Check application version on Unix
+        if: runner.os != 'Windows'
+        run: |
+          actual=$(java -jar "target/kzp-java-labs-volos-${PROJECT_VERSION}.jar" --version)
+          test "$actual" = "kzp-java-labs-volos ${PROJECT_VERSION}"
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: kzp-java-labs-volos-${{ matrix.os }}-${{ github.run_number }}
-          path: target/kzp-java-labs-volos-1.2.0.jar
+          path: target/kzp-java-labs-volos-${{ env.PROJECT_VERSION }}.jar
           if-no-files-found: error
