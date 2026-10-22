@@ -80,7 +80,7 @@ class TripHierarchyTest {
 
     @Test
     void mixedInputReportsValidAndInvalidRows() throws IOException {
-        String report = Main.buildReport(Path.of("data", "lab03-mixed.csv"));
+        String report = new TripReportService().buildReport(Path.of("data", "lab03-mixed.csv"));
 
         assertTrue(report.contains("Rows: 6"));
         assertTrue(report.contains("Valid rows: 4"));
