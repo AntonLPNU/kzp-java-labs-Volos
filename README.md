@@ -4,7 +4,7 @@
 
 Репозиторій містить Java-частину наскрізного навчального продукту для лабораторних робіт 1-5 та окремий Python-пакет для лабораторних робіт №6-7.
 
-Поточна версія `1.2.0` охоплює лабораторні роботи №1-5: консольну обробку CSV, типізовану модель пасажирських і вантажних рейсів, запити Stream API та типізоване CSV-сховище з round-trip перевіркою.
+Java-застосунок охоплює лабораторні роботи №1-5: консольну обробку CSV, типізовану модель пасажирських і вантажних рейсів, запити Stream API та типізоване CSV-сховище з round-trip перевіркою. Його поточна версія задається лише в `pom.xml`.
 
 Проєкт розробляється поступово: кожна лабораторна робота додає нову функціональність, але має зберігати працездатність попередніх частин.
 
@@ -76,6 +76,8 @@ python -m build
 
 Докладний звіт поточної ЛР7 розміщено у [`REPORT.md`](REPORT.md); звіти ЛР1-6 лежать у [`reports/`](reports/).
 
+Точка входу `Main` лише передає аргументи `ApplicationController`. `CommandLineParser` розбирає параметри, а `TripReportService` формує звіт і виконує експорт CSV. Єдине джерело версії Java-застосунку — `pom.xml`: Maven фільтрує її у ресурс під час збірки, а `--version` читає звідти.
+
 ## Запуск
 
 На Windows:
@@ -84,19 +86,21 @@ python -m build
 .\mvnw.cmd test
 .\mvnw.cmd verify
 .\mvnw.cmd package
-java -jar target\kzp-java-labs-volos-1.2.0.jar
+$version = .\mvnw.cmd -q help:evaluate "-Dexpression=project.version" -DforceStdout
+$jar = "target\kzp-java-labs-volos-$version.jar"
+java -jar $jar
 ```
 
 Із власними шляхами до вхідного файла та звіту:
 
 ```powershell
-java -jar target\kzp-java-labs-volos-1.2.0.jar --input data\lab03-mixed.csv --output out\report.txt
+java -jar $jar --input data\lab03-mixed.csv --output out\report.txt
 ```
 
 Експорт коректних рейсів із legacy-файла з крапкою з комою до анотованого CSV:
 
 ```powershell
-java -jar target\kzp-java-labs-volos-1.2.0.jar --input data\input.csv --output out\report.txt --csv out\trips.csv
+java -jar $jar --input data\input.csv --output out\report.txt --csv out\trips.csv
 ```
 
 Параметр `--csv` необов'язковий. Некоректні вхідні рядки не потрапляють в експорт; програма виводить їхню кількість. `data/lab05-roundtrip.csv` демонструє формат, включно з лапками, комою та quoted multiline значенням.
@@ -104,7 +108,7 @@ java -jar target\kzp-java-labs-volos-1.2.0.jar --input data\input.csv --output o
 Версія програми:
 
 ```powershell
-java -jar target\kzp-java-labs-volos-1.2.0.jar --version
+java -jar $jar --version
 ```
 
 На macOS та Ubuntu замість `.\mvnw.cmd` використовуйте `./mvnw`. Для Python активуйте `.venv/bin/activate` замість Windows-команди активації.
