@@ -15,7 +15,7 @@ import org.junit.jupiter.api.io.TempDir;
 class MainTest {
     @Test
     void helpTextMentionsInputAndOutputOptions() {
-        String help = Main.helpText();
+        String help = CommandLineParser.helpText();
 
         assertTrue(help.contains("--input"));
         assertTrue(help.contains("--output"));
@@ -23,19 +23,19 @@ class MainTest {
 
     @Test
     void inputPathUsesDefaultWhenOptionIsMissing() {
-        assertTrue(Main.inputPath(new String[0]).endsWith(Path.of("data", "input.csv")));
+        assertTrue(CommandLineParser.parse(new String[0]).input().endsWith(Path.of("data", "input.csv")));
     }
 
     @Test
     void inputPathUsesCommandLineValue() {
-        Path input = Main.inputPath(new String[] {"--input", "data/custom.csv"});
+        Path input = CommandLineParser.parse(new String[] {"--input", "data/custom.csv"}).input();
 
         assertTrue(input.endsWith(Path.of("data", "custom.csv")));
     }
 
     @Test
     void outputPathUsesCommandLineValue() {
-        Path output = Main.outputPath(new String[] {"--output", "out/custom-report.txt"});
+        Path output = CommandLineParser.parse(new String[] {"--output", "out/custom-report.txt"}).output();
 
         assertTrue(output.endsWith(Path.of("out", "custom-report.txt")));
     }
@@ -63,47 +63,47 @@ class MainTest {
     void validTripFieldsHaveNoValidationError() {
         String[] fields = "Львів 2 - Жовква 06:15;Петро Коваль;29.4;6.8;2026-09-10".split(";", -1);
 
-        assertNull(Main.validateTripFields(fields, 1));
+        assertNull(TripReportService.validateTripFields(fields, 1));
     }
 
     @Test
     void validationRejectsBlankVehicle() {
         String[] fields = ";Петро Коваль;29.4;6.8;2026-09-11".split(";", -1);
 
-        assertTrue(Main.validateTripFields(fields, 9).contains("vehicle is required"));
+        assertTrue(TripReportService.validateTripFields(fields, 9).contains("vehicle is required"));
     }
 
     @Test
     void validationRejectsInvalidKmNumber() {
         String[] fields = "Львів 2 - Цетуля 16:10;Олена Кравець;помилка;8.2;2026-09-11".split(";", -1);
 
-        assertTrue(Main.validateTripFields(fields, 10).contains("km has invalid number format"));
+        assertTrue(TripReportService.validateTripFields(fields, 10).contains("km has invalid number format"));
     }
 
     @Test
     void validationRejectsNegativeKm() {
         String[] fields = "Львів 2 - Карів 08:50;Степан Мороз;-10.0;2.5;2026-09-11".split(";", -1);
 
-        assertTrue(Main.validateTripFields(fields, 11).contains("km must be greater than 0"));
+        assertTrue(TripReportService.validateTripFields(fields, 11).contains("km must be greater than 0"));
     }
 
     @Test
     void validationRejectsBlankDriver() {
         String[] fields = "Львів 2 - Дев'ятир 10:20; ;45.0;10.1;2026-09-11".split(";", -1);
 
-        assertTrue(Main.validateTripFields(fields, 12).contains("driver is required"));
+        assertTrue(TripReportService.validateTripFields(fields, 12).contains("driver is required"));
     }
 
     @Test
     void fuelPer100KmUsesTotalFuelAndTotalDistance() {
-        double result = Main.fuelPer100Km(85.2, 375.1);
+        double result = TripReportService.fuelPer100Km(85.2, 375.1);
 
         assertEquals(22.71, result, 0.01);
     }
 
     @Test
     void buildReportContainsCalculatedIndicators() throws IOException {
-        String report = Main.buildReport(Path.of("data", "input.csv"));
+        String report = new TripReportService().buildReport(Path.of("data", "input.csv"));
 
         assertTrue(report.contains("Valid rows: 8"));
         assertTrue(report.contains("Invalid rows: 4"));
@@ -117,7 +117,7 @@ class MainTest {
         Path input = tempDir.resolve("invalid.csv");
         Files.writeString(input, "Route;Driver;NaN;1;date\nRoute;Driver;0;1;date\n", StandardCharsets.UTF_8);
 
-        String report = Main.buildReport(input);
+        String report = new TripReportService().buildReport(input);
 
         assertTrue(report.contains("Valid rows: 0"));
         assertTrue(report.contains("Invalid rows: 2"));
@@ -130,7 +130,7 @@ class MainTest {
     void writeReportCreatesOutputFile(@TempDir Path tempDir) throws IOException {
         Path output = tempDir.resolve("report.txt");
 
-        Main.writeReport(output, "test report");
+        new TripReportService().writeReport(output, "test report");
 
         assertEquals("test report", Files.readString(output));
     }

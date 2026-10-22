@@ -4,7 +4,7 @@
 
 Репозиторій містить Java-частину наскрізного навчального продукту для лабораторних робіт 1-5.
 
-Поточна версія `1.2.0` охоплює лабораторні роботи №1-4: консольну обробку CSV, типізовану модель пасажирських і вантажних рейсів та запити Stream API до колекції рейсів.
+Поточна версія `1.2.0` охоплює лабораторні роботи №1-4: консольну обробку CSV, типізовану модель пасажирських і вантажних рейсів та запити Stream API до колекції рейсів. Версія застосунку задається лише в `pom.xml`.
 
 Проєкт розробляється поступово: кожна лабораторна робота додає нову функціональність, але має зберігати працездатність попередніх частин.
 
@@ -51,6 +51,7 @@ Maven-проєкт містить консольну програму. Вона 
 
 `TripQueries` реалізує запити варіанта 7: рейси понад 100 км, проєкцію назв транспорту, групову витрату пального на 100 км, `DoubleSummaryStatistics`, топ-N за відстанню/датою та пошук першого рейсу через `Optional`. Методи не змінюють вхідний список. Докладні приклади наведені в кореневому [`REPORT.md`](REPORT.md), звіти попередніх лабораторних збережено в `reports/`.
 
+Точку входу `Main` зведено до запуску `ApplicationController`. `CommandLineParser` читає параметри, а `TripReportService` формує звіт і використовує Stream API для статистики. Maven підставляє версію з `pom.xml` у ресурс, звідки її читає `--version`.
 ## Запуск
 
 На Windows:
@@ -59,19 +60,21 @@ Maven-проєкт містить консольну програму. Вона 
 .\mvnw.cmd test
 .\mvnw.cmd verify
 .\mvnw.cmd package
-java -jar target\kzp-java-labs-volos-1.2.0.jar
+$version = .\mvnw.cmd -q help:evaluate "-Dexpression=project.version" -DforceStdout
+$jar = "target\kzp-java-labs-volos-$version.jar"
+java -jar $jar
 ```
 
 Із власними шляхами до вхідного файла та звіту:
 
 ```powershell
-java -jar target\kzp-java-labs-volos-1.2.0.jar --input data\lab03-mixed.csv --output out\report.txt
+java -jar $jar --input data\lab03-mixed.csv --output out\report.txt
 ```
 
 Версія програми:
 
 ```powershell
-java -jar target\kzp-java-labs-volos-1.2.0.jar --version
+java -jar $jar --version
 ```
 
 На macOS та Ubuntu замість `.\mvnw.cmd` використовуйте `./mvnw`.
