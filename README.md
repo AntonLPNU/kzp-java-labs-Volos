@@ -4,7 +4,7 @@
 
 Репозиторій містить Java-частину наскрізного навчального продукту для лабораторних робіт 1-5.
 
-Поточна версія `1.2.0` розробляється для лабораторної роботи №3 і моделює пасажирські та вантажні рейси автопарку.
+Java-програма розвивається від моделі одного рейсу до обробки пасажирських і вантажних рейсів. Версія застосунку задається лише в `pom.xml`.
 
 Проєкт розробляється поступово: кожна лабораторна робота додає нову функціональність, але має зберігати працездатність попередніх частин.
 
@@ -49,6 +49,7 @@ Maven-проєкт містить консольну програму. Вона 
 
 Для рейсу потрібні непорожні `vehicle`, `driver` і `date`, скінченне `km > 0` та скінченне `fuelLiters >= 0`. `NaN` і нескінченність відхиляються. Показники та формат звіту на демонстраційному файлі залишилися такими самими, як у версії 1.0.0.
 
+Точку входу `Main` зведено до запуску `ApplicationController`. `CommandLineParser` читає параметри, а `TripReportService` відповідає за звіт. Maven підставляє версію з `pom.xml` у ресурс, звідки її читає `--version`.
 ## Запуск
 
 На Windows:
@@ -57,19 +58,21 @@ Maven-проєкт містить консольну програму. Вона 
 .\mvnw.cmd test
 .\mvnw.cmd verify
 .\mvnw.cmd package
-java -jar target\kzp-java-labs-volos-1.2.0.jar
+$version = .\mvnw.cmd -q help:evaluate "-Dexpression=project.version" -DforceStdout
+$jar = "target\kzp-java-labs-volos-$version.jar"
+java -jar $jar
 ```
 
 Із власними шляхами до вхідного файла та звіту:
 
 ```powershell
-java -jar target\kzp-java-labs-volos-1.2.0.jar --input data\lab03-mixed.csv --output out\report.txt
+java -jar $jar --input data\lab03-mixed.csv --output out\report.txt
 ```
 
 Версія програми:
 
 ```powershell
-java -jar target\kzp-java-labs-volos-1.2.0.jar --version
+java -jar $jar --version
 ```
 
 На macOS та Ubuntu замість `.\mvnw.cmd` використовуйте `./mvnw`.
